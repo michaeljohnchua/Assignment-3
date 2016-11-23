@@ -12,7 +12,7 @@ var objects;
             this._timeBetweenShots = 1;
             this._invincible = false;
             this._invincibleTimer = 0;
-            this.scrollDistance = 200;
+            this.scrollDistance = 300;
             this.speed = 5;
             this.timer = 800;
             this.hitBool = false;
@@ -129,18 +129,19 @@ var objects;
             }
         };
         Player.prototype.moveDown = function () {
-            if ((Math.abs(this.scrollDistance) - Math.abs(this.position.y)) < 260) {
+            if ((Math.abs(this.scrollDistance) - Math.abs(this.position.y)) < 220) {
                 this.position.y += this.speed;
             }
         };
         Player.prototype.moveLeft = function () {
-            if (this.position.x > 45) {
+            console.log(this.position.x);
+            if (this.position.x > -10) {
                 this.position.x -= this.speed;
                 this.gotoAndStop("playerLeft");
             }
         };
         Player.prototype.moveRight = function () {
-            if (this.position.x < 850) {
+            if (this.position.x < 805) {
                 this.position.x += this.speed;
                 this.gotoAndStop("playerRight");
             }

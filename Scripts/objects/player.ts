@@ -14,7 +14,7 @@ module objects {
         public height:number;
         public centerX:number;
         public centerY:number;
-        public scrollDistance : number = 200;
+        public scrollDistance : number = 300;
         public speed : number =5;
         public timer : number = 800;
         public hitBool: boolean = false;
@@ -144,20 +144,22 @@ module objects {
         }
 
         public moveDown() {
-            if ((Math.abs(this.scrollDistance)-Math.abs(this.position.y)) < 260){
+            
+            if ((Math.abs(this.scrollDistance)-Math.abs(this.position.y)) < 220){
              this.position.y += this.speed;
             }
         }
 
         public moveLeft() {
-            if (this.position.x>45){
+            console.log(this.position.x);
+            if (this.position.x>-10){
             this.position.x -= this.speed;
             this.gotoAndStop("playerLeft")
             }
         }
 
         public moveRight() {
-            if(this.position.x<850){
+            if(this.position.x<805){
             this.position.x += this.speed;
             this.gotoAndStop("playerRight");
             }
