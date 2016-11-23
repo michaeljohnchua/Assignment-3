@@ -11,19 +11,19 @@ var gameAtlas : createjs.SpriteSheet;
 var currentScene : objects.Scene;
 var scene: number;
 
-var collision: managers.Collision;
+var gameWin : boolean = false;
 
 // Preload Assets required
 var assetData:objects.Asset[] = [
     {id: "Space_BG", src:"../../Assets/images/space_bg.png"},
-    {id: "StarsBG", src:"../../Assets/images/StarBackground.png"},
-    {id: "StarBig", src:"../../Assets/images/StarBig.png"},
-    {id: "StarSmall", src:"../../Assets/images/StarSmall.png"},
-    {id: "Menu_BG", src:"../../Assets/images/menuBG.png"},
-    {id: "PlayBtn", src:"../../Assets/images/playBtn.png"},
+    {id: "Menu_BG", src:"../../Assets/images/menuBG.jpg"},
+    {id: "PlayBtn", src:"../../Assets/images/start.png"},
+    {id: "HelpBtn", src:"../../Assets/images/help.png"},
+    {id: "BackBtn", src:"../../Assets/images/BackBtn.png"},
     {id: "Atlas", src:"../../Assets/images/spritesheet.png"},
-    
-
+    {id: "Title", src:"../../Assets/images/Title.png"},
+    {id: "HelpBG", src:"../../Assets/images/HelpBG.png"},
+    {id: "GameOverBG", src:"../../Assets/images/GameOver.png"}
 ];
 
 function preload() {
@@ -44,8 +44,6 @@ function init() {
     stage.enableMouseOver(20);
     createjs.Ticker.setFPS(config.Game.FPS);
     createjs.Ticker.on("tick", this.gameLoop, this);
-
-    collision = new managers.Collision();
 
     let atlasData = {
                 "images": [
@@ -97,7 +95,7 @@ function init() {
 
     gameAtlas = new createjs.SpriteSheet(atlasData);
 
-    scene = config.Scene.SHOOTER;
+    scene = config.Scene.MENU;
     changeScene();
 }
 
@@ -121,6 +119,16 @@ function changeScene() : void {
             stage.removeAllChildren();
             currentScene = new scenes.Shooter();
             console.log("Starting SHOOTER scene");
+            break;
+        case config.Scene.HELP :
+            stage.removeAllChildren();
+            currentScene = new scenes.Help();
+            console.log("Starting Help scene");
+            break;
+        case config.Scene.GAMEOVER :
+            stage.removeAllChildren();
+            currentScene = new scenes.GameOver();
+            console.log("Starting Game Over scene");
             break;
     }
     

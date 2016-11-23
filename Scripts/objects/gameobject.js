@@ -85,8 +85,8 @@ var objects;
             this.name = imageString;
             this.width = this.getBounds().width;
             this.height = this.getBounds().height;
-            this.regX = this.width / 2;
-            this.regY = this.height / 2;
+            //this.regX = 0;
+            //this.regY = 0;
             this.position = new objects.Vector2(this.x, this.y);
         };
         GameObject.prototype.update = function () {

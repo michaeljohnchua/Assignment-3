@@ -1,9 +1,10 @@
 module objects {
-    export class Enemy extends objects.GameObject {
+    export class EnemyBoss extends objects.GameObject {
 
         private _move : objects.Vector2;
         private _speed : number;
         private _shots : objects.EnemyLaser[];
+        
         // public variables
         public name:string;
         public width:number;
@@ -13,6 +14,7 @@ module objects {
         public aimBool : boolean = false;
         public rangeBool: boolean= false;
         public hitBool: boolean =false;
+        public life :number = 5;
 
         constructor(imageString:string, position:objects.Vector2) {
             super(imageString, "");
@@ -22,7 +24,7 @@ module objects {
             this.position = position;
             this.x = this.position.x;
             this.y = this.position.y;
-            this._speed = .25;
+            this._speed = 2;
 
         }
 
@@ -31,15 +33,30 @@ module objects {
         }
         public update() : void {
             super.update();
-            this.position.y += this._speed;
+            //console.log(this.position +  " " + this._speed);
+            if(this.position.x <= 0 && this._speed<0){
+                this._speed = 10;
+            }
+            else if (this.position.x >=800 && this._speed>0){
+               this._speed = -10;
+            }
+            this.position.x += this._speed;
             this.timer += createjs.Ticker.interval;
 
-            if (this.aimBool && this.rangeBool && this.timer>2000 && this.hitBool==false){
+            if (this.aimBool && this.rangeBool && this.timer>1200 && this.life>0){
                 let newLaser = new objects.EnemyLaser();
-                newLaser.setPosition(new objects.Vector2((this.position.x + (this.getBounds().width/2)-3), this.position.y +30));
+                newLaser.setPosition(new objects.Vector2((this.position.x + (this.getBounds().width/2)-3), this.position.y +100));
                 this._shots.push(newLaser);
                 this.timer = 0.0;
             }
+
+           
+            if (this.hitBool){
+                this.hitBool = false;
+                this.life -=1;
+                
+            }
+           
 
             for (let laser of this._shots) {
                 laser.update();

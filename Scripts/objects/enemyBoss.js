@@ -5,45 +5,57 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var objects;
 (function (objects) {
-    var Enemy = (function (_super) {
-        __extends(Enemy, _super);
-        function Enemy(imageString, position) {
+    var EnemyBoss = (function (_super) {
+        __extends(EnemyBoss, _super);
+        function EnemyBoss(imageString, position) {
             _super.call(this, imageString, "");
             this.timer = 800;
             this.aimBool = false;
             this.rangeBool = false;
             this.hitBool = false;
+            this.life = 5;
             this._shots = [];
             this.name = imageString;
             this.position = position;
             this.x = this.position.x;
             this.y = this.position.y;
-            this._speed = .25;
+            this._speed = 2;
         }
-        Object.defineProperty(Enemy.prototype, "getShots", {
+        Object.defineProperty(EnemyBoss.prototype, "getShots", {
             get: function () {
                 return this._shots;
             },
             enumerable: true,
             configurable: true
         });
-        Enemy.prototype.update = function () {
+        EnemyBoss.prototype.update = function () {
             _super.prototype.update.call(this);
-            this.position.y += this._speed;
+            //console.log(this.position +  " " + this._speed);
+            if (this.position.x <= 0 && this._speed < 0) {
+                this._speed = 10;
+            }
+            else if (this.position.x >= 800 && this._speed > 0) {
+                this._speed = -10;
+            }
+            this.position.x += this._speed;
             this.timer += createjs.Ticker.interval;
-            if (this.aimBool && this.rangeBool && this.timer > 2000 && this.hitBool == false) {
+            if (this.aimBool && this.rangeBool && this.timer > 1200 && this.life > 0) {
                 var newLaser = new objects.EnemyLaser();
-                newLaser.setPosition(new objects.Vector2((this.position.x + (this.getBounds().width / 2) - 3), this.position.y + 30));
+                newLaser.setPosition(new objects.Vector2((this.position.x + (this.getBounds().width / 2) - 3), this.position.y + 100));
                 this._shots.push(newLaser);
                 this.timer = 0.0;
+            }
+            if (this.hitBool) {
+                this.hitBool = false;
+                this.life -= 1;
             }
             for (var _i = 0, _a = this._shots; _i < _a.length; _i++) {
                 var laser = _a[_i];
                 laser.update();
             }
         };
-        return Enemy;
+        return EnemyBoss;
     }(objects.GameObject));
-    objects.Enemy = Enemy;
+    objects.EnemyBoss = EnemyBoss;
 })(objects || (objects = {}));
-//# sourceMappingURL=enemy.js.map
+//# sourceMappingURL=enemyBoss.js.map

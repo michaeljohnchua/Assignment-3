@@ -9,7 +9,7 @@ var objects;
         __extends(Laser, _super);
         function Laser() {
             _super.call(this, "laserGreen", "");
-            this.speed = 15;
+            this.speed = 7;
             this.addToContainer = false;
             this.hitBool = false;
             this.timer = 0;
@@ -20,10 +20,6 @@ var objects;
             this.position.y -= this.speed;
             if (this.hitBool) {
                 this.timer += 1;
-                this.speed = 0;
-                this.x -= 5;
-                this.y -= 30;
-                this.gotoAndStop("laserGreenShot");
             }
         };
         Laser.prototype.setPosition = function (newPosition) {
@@ -35,4 +31,4 @@ var objects;
     }(objects.GameObject));
     objects.Laser = Laser;
 })(objects || (objects = {}));
-//# sourceMappingURL=laser.js.map
+//# sourceMappingURL=laser.1.js.map

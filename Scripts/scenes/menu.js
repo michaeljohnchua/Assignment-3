@@ -17,12 +17,22 @@ var scenes;
         }
         Menu.prototype.start = function () {
             console.log("Menu Scene Started");
-            this._playBtn = new objects.Button("PlayBtn", config.Screen.CENTER_X, config.Screen.CENTER_Y + 150);
-            this.addChild(this._playBtn);
+            this._playBtn = new objects.Button("PlayBtn", config.Screen.CENTER_X - 30, config.Screen.CENTER_Y);
             this._playBtn.on("click", this._playBtnClick, this);
+            this._playBtn.scaleX = .60;
+            this._playBtn.scaleY = .60;
             this._menuBG = new createjs.Bitmap(assets.getResult("Menu_BG"));
-            // this.addChild(this._menuBG);
+            this._menuBG.scaleX = 1.44;
+            this._menuBG.scaleY = 1.1;
+            this._helpBtn = new objects.Button("HelpBtn", 100, 480);
+            this._helpBtn.on("click", this._helpBtnClick, this);
+            this._title = new createjs.Bitmap(assets.getResult("Title"));
+            this._title.x = 215;
+            this._title.y = 50;
             this.addChildAt(this._menuBG, 0);
+            this.addChild(this._title);
+            this.addChild(this._playBtn);
+            this.addChild(this._helpBtn);
             // Add menu scene to global stage container
             stage.addChild(this);
         };
@@ -30,6 +40,10 @@ var scenes;
         };
         Menu.prototype._playBtnClick = function (event) {
             scene = config.Scene.SHOOTER;
+            changeScene();
+        };
+        Menu.prototype._helpBtnClick = function (event) {
+            scene = config.Scene.HELP;
             changeScene();
         };
         return Menu;

@@ -10,8 +10,13 @@ var objects;
         function Player(imageString) {
             _super.call(this, imageString, "");
             this._timeBetweenShots = 1;
-            this._timer = 1000;
+            this._invincible = false;
+            this._invincibleTimer = 0;
             this.scrollDistance = 200;
+            this.speed = 5;
+            this.timer = 800;
+            this.hitBool = false;
+            this.life = 5;
             this._shots = [];
             this.width = this.getBounds().width;
             this.height = this.getBounds().height;
@@ -30,7 +35,7 @@ var objects;
         });
         Player.prototype.update = function () {
             _super.prototype.update.call(this);
-            this._timer += createjs.Ticker.interval;
+            this.timer += createjs.Ticker.interval;
             if (controls.UP) {
                 this.moveUp();
             }
@@ -40,20 +45,41 @@ var objects;
             if (controls.RIGHT) {
                 this.moveRight();
             }
-            if (controls.LEFT) {
+            else if (controls.LEFT) {
                 this.moveLeft();
             }
-            if (controls.SHOOT && this._timer > 1500) {
+            else {
+                this.gotoAndStop("player");
+            }
+            if (controls.SHOOT && this.timer > 800) {
                 var newLaser = new objects.Laser();
-                newLaser.setPosition(new objects.Vector2(this.position.x, this.position.y - 50));
+                newLaser.setPosition(new objects.Vector2((this.position.x + (this.getBounds().width / 2) - 3), this.position.y - 30));
                 this._shots.push(newLaser);
-                this._timer = 0.0;
+                this.timer = 0.0;
             }
             for (var _i = 0, _a = this._shots; _i < _a.length; _i++) {
                 var laser = _a[_i];
                 laser.update();
             }
-            //console.log(this._timer);
+            if (this.hitBool) {
+                if (this._invincible) {
+                    if (this._invincibleTimer > 1500) {
+                        this._invincible = false;
+                    }
+                }
+                else {
+                    this.life -= 1;
+                    console.log(this.life);
+                    this._invincible = true;
+                    this._invincibleTimer = 0;
+                }
+                this.hitBool = false;
+            }
+            if (this.life <= 0) {
+                this.gotoAndStop("playerDamaged");
+                this.speed = 0;
+            }
+            this._invincibleTimer += createjs.Ticker.interval;
         };
         Player.prototype._onKeyDown = function (event) {
             switch (event.keyCode) {
@@ -99,22 +125,24 @@ var objects;
         };
         Player.prototype.moveUp = function () {
             if (this.position.y > -3300) {
-                this.position.y -= 5;
+                this.position.y -= this.speed;
             }
         };
         Player.prototype.moveDown = function () {
             if ((Math.abs(this.scrollDistance) - Math.abs(this.position.y)) < 260) {
-                this.position.y += 5;
+                this.position.y += this.speed;
             }
         };
         Player.prototype.moveLeft = function () {
             if (this.position.x > 45) {
-                this.position.x -= 5;
+                this.position.x -= this.speed;
+                this.gotoAndStop("playerLeft");
             }
         };
         Player.prototype.moveRight = function () {
             if (this.position.x < 850) {
-                this.position.x += 5;
+                this.position.x += this.speed;
+                this.gotoAndStop("playerRight");
             }
         };
         return Player;

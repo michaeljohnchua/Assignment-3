@@ -5,8 +5,8 @@ module objects {
         private _shots : objects.Laser[];
 
         private _timeBetweenShots : number = 1;
-        private _timer : number = 1000;
-
+        private _invincible: boolean = false;
+        private _invincibleTimer: number = 0;
        
         // PUBLIC VARIABLES
         public name:string;
@@ -14,7 +14,11 @@ module objects {
         public height:number;
         public centerX:number;
         public centerY:number;
-        public  scrollDistance : number = 200;
+        public scrollDistance : number = 200;
+        public speed : number =5;
+        public timer : number = 800;
+        public hitBool: boolean = false;
+        public life: number =5;
 
         constructor(imageString:string) {
             super(imageString, "");
@@ -39,7 +43,7 @@ module objects {
 
         public update() : void {
             super.update();
-            this._timer += createjs.Ticker.interval;
+            this.timer += createjs.Ticker.interval;
             if(controls.UP) {
                 this.moveUp();
             }
@@ -51,22 +55,42 @@ module objects {
             if(controls.RIGHT) {
                 this.moveRight();
             }
-
-            if(controls.LEFT) {
+            else if(controls.LEFT) {
                 this.moveLeft();
             }
-            if(controls.SHOOT && this._timer > 1500) {
+            else{
+                this.gotoAndStop("player")
+            }
+            if(controls.SHOOT && this.timer > 800) {
                 let newLaser = new objects.Laser();
-                newLaser.setPosition(new objects.Vector2(this.position.x, this.position.y - 50));
+                newLaser.setPosition(new objects.Vector2((this.position.x + (this.getBounds().width/2)-3), this.position.y -30));
                 this._shots.push(newLaser);
-                this._timer = 0.0;
+                this.timer = 0.0;
             }
             for (let laser of this._shots) {
                 laser.update();
             }
-            //console.log(this._timer);
 
+            if (this.hitBool){
+                if (this._invincible){
+                    if (this._invincibleTimer >1500){
+                        this._invincible = false;
+                    }
+                }
+                else {
+                    this.life -=1;
+                    console.log(this.life);
+                    this._invincible = true;
+                    this._invincibleTimer =0;
+                }
+                 this.hitBool = false;
+            }
             
+            if (this.life<=0){
+                this.gotoAndStop("playerDamaged");
+                this.speed =0;
+            }
+            this._invincibleTimer += createjs.Ticker.interval;
         }
 
         private _onKeyDown(event : KeyboardEvent) {
@@ -115,25 +139,27 @@ module objects {
 
         public moveUp() {
             if(this.position.y>-3300){
-            this.position.y -= 5;
+            this.position.y -= this.speed;
             }
         }
 
         public moveDown() {
             if ((Math.abs(this.scrollDistance)-Math.abs(this.position.y)) < 260){
-             this.position.y += 5;
+             this.position.y += this.speed;
             }
         }
 
         public moveLeft() {
             if (this.position.x>45){
-            this.position.x -= 5;
+            this.position.x -= this.speed;
+            this.gotoAndStop("playerLeft")
             }
         }
 
         public moveRight() {
             if(this.position.x<850){
-            this.position.x += 5;
+            this.position.x += this.speed;
+            this.gotoAndStop("playerRight");
             }
         }
     }
